@@ -64,6 +64,15 @@ app.get("/notes/:id", (req, res) => {
   else res.status(404).json({err : "404 not found", msg : `there is no note with ${currentId}`})
 })
 
+app.delete("/notes/:id", (req, res) => {
+  const currentId = Number(req.params.id);
+  notes = notes.filter((note) => note.id !== currentId)
+
+  res.status(204).json({msg : "note successfully deleted"})
+
+  // res.status(204).end();
+})
+
 app.listen(Port, () => {
     console.log(`Server running on port http://localhost:${Port}`)
 });
