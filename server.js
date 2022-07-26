@@ -25,6 +25,7 @@ const app = express();
 const Port = process.env.PORT || 5000;
 
 app.use(cors());
+app.use(express.json());
 
 let notes = [
     {
@@ -71,6 +72,16 @@ app.delete("/notes/:id", (req, res) => {
   res.status(204).json({msg : "note successfully deleted"})
 
   // res.status(204).end();
+})
+
+app.post("/notes/", (req, res) => {
+  const newContent = req.body;
+  newContent.id = notes.length + 1;
+  newContent.date = new Date()
+
+  notes.push(newContent)
+
+  res.status(204).json(newContent)
 })
 
 app.listen(Port, () => {
