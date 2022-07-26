@@ -16,6 +16,7 @@
 // using express framework
 const express = require("express");
 const dotenv = require("dotenv");
+const cors = require("cors");
 
 dotenv.config();
 
@@ -23,10 +24,36 @@ const app = express();
 
 const Port = process.env.PORT || 5000;
 
+app.use(cors());
+
+let notes = [
+    {
+      id: 1,
+      content: "HTML is easy",
+      date: "2022-1-17T17:30:31.098Z",
+      important: true,
+    },
+    {
+      id: 2,
+      content: "Browser can execute only JavaScript",
+      date: "2022-1-17T18:39:34.091Z",
+      important: false,
+    },
+    {
+      id: 3,
+      content: "GET and POST are the most important methods of HTTP protocol",
+      date: "2022-1-17T19:20:14.298Z",
+      important: true,
+    },
+  ];
+
 app.get("/", (req, res) => {
     res.send("hello world")
 });
 
+app.get("/notes", (req, res) => {
+    res.json(notes)
+})
 
 app.listen(Port, () => {
     console.log(`Server running on port http://localhost:${Port}`)
