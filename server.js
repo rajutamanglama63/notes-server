@@ -54,6 +54,14 @@ app.get("/", (req, res) => {
 app.get("/notes", (req, res) => {
     // res.status(200).json(notes)
     res.json(notes)
+});
+
+app.get("/notes/:id", (req, res) => {
+  const currentId = Number(req.params.id);
+  const thisNote = notes.find((note) => note.id === currentId)
+
+  if(thisNote) res.status(200).json(thisNote)
+  else res.status(404).json({err : "404 not found", msg : `there is no note with ${currentId}`})
 })
 
 app.listen(Port, () => {
