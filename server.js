@@ -50,7 +50,7 @@ app.use((req, res, next) => {
 let notes = [
     {
       id: 1,
-      content: "HTML is easy",
+      content: "HTML is easy to learn",
       date: "2022-1-17T17:30:31.098Z",
       important: true,
     },
