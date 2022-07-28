@@ -69,7 +69,7 @@ function App() {
   };
   return (
     <div>
-      <h1>Notes App</h1>
+      <h1>Heroku Notes App</h1>
       <Notification message={errMsg} />
       <form onSubmit={submitHandler}>
         <input
