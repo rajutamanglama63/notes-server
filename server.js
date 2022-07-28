@@ -26,6 +26,14 @@ const Port = process.env.PORT || 5000;
 
 
 // all this use things are middlewares
+
+// we have to use middleware in server code where we need to pass callback function which goes like - express.static("build") to run
+// both react app and server in same url --- before doing it we have to create build folder by commanding "npm run build"
+// in react app and it should be copied down to server's root directory.
+
+// what all this particular middleware does is check for executable file and execute or render it on browser before 
+// checking for other codes in backend server
+app.use(express.static("build"))   
 app.use(cors());
 app.use(express.json());
 
