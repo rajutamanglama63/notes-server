@@ -22,7 +22,7 @@ dotenv.config();
 
 const app = express();
 
-const Port = process.env.PORT || 5000;
+const Port = process.env.PORT || 3001;
 
 
 // all this use things are middlewares
