@@ -96,16 +96,49 @@ app.get("/notes/:id", (req, res) => {
     });
 });
 
-app.delete("/notes/:id", (req, res) => {
-  const currentId = Number(req.params.id);
-  notes = notes.filter((note) => note.id !== currentId);
+app.delete("/notes/:id", (req, res, next) => {
+  // USING ARRAY AS DUMMY DB
 
-  res.status(204).json({ msg: "note successfully deleted" });
+  // const currentId = Number(req.params.id);
+  // notes = notes.filter((note) => note.id !== currentId);
+
+  // res.status(204).json({ msg: "note successfully deleted" });
 
   // res.status(204).end();
+
+  // USING MONGO AS DB
+  const id = req.params.id;
+
+  Note.findByIdAndRemove(id)
+    .then((result) => {
+      res.status(200).json({
+        success: "Successfully deleted",
+        result,
+      });
+    })
+    .catch((err) => next(err));
 });
 
-app.post("/notes/", (req, res, next) => {
+app.put("/notes/:id", (req, res, next) => {
+  const id = req.params.id;
+
+  const noteToUpdate = {
+    content: req.body.content,
+    important: req.body.important,
+  };
+
+  Note.findByIdAndUpdate(id, noteToUpdate, {
+    new: true,
+    runValidators: true,
+    context: "query",
+  })
+    .then((updatedNote) => {
+      res.status(200).json({ success: "Successfully updated", updatedNote });
+    })
+    .catch((err) => next(err));
+});
+
+app.post("/notes", (req, res, next) => {
   // USING STATIC ARRAY AS DB
   // const newContent = req.body;
   // newContent.id = notes.length + 1;
