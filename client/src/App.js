@@ -50,8 +50,8 @@ function App() {
         setNewNote("");
       })
       .catch((err) => {
-        console.dir(err);
-        setErrMsg(err);
+        // console.dir(err);
+        setErrMsg(err.response.data.err);
         setTimeout(() => {
           setErrMsg(null);
         }, 2000);
@@ -72,8 +72,8 @@ function App() {
         setNotes(notes.map((a) => (a.id !== id ? a : data)));
       })
       .catch((err) => {
-        console.dir(err);
-        // setErrMsg(err);
+        // console.dir(err);
+        setErrMsg(err.response.data.err);
         setTimeout(() => setErrMsg(null), 2000);
       });
   };

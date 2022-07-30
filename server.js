@@ -121,6 +121,7 @@ app.delete("/notes/:id", (req, res, next) => {
 
 app.put("/notes/:id", (req, res, next) => {
   const id = req.params.id;
+  console.log("l", id);
 
   const noteToUpdate = {
     content: req.body.content,
