@@ -152,7 +152,7 @@ app.post("/notes", (req, res, next) => {
   const newNote = new Note({
     content: req.body.content,
     important: req.body.important || false,
-    date: new Date(),
+    date: req.body.date,
   });
 
   newNote

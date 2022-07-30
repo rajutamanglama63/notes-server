@@ -42,11 +42,20 @@ function App() {
     };
 
     // axios.post("http://localhost:5000/notes", note)
-    noteApiServices.postNoteObj(note).then((note) => {
-      console.log(note);
-      setNotes([...notes, note]);
-      setNewNote("");
-    });
+    noteApiServices
+      .postNoteObj(note)
+      .then((note) => {
+        // console.log(note);
+        setNotes([...notes, note]);
+        setNewNote("");
+      })
+      .catch((err) => {
+        console.dir(err);
+        setErrMsg(err);
+        setTimeout(() => {
+          setErrMsg(null);
+        }, 2000);
+      });
   };
 
   const btnToggleHandler = (id) => {
@@ -59,12 +68,13 @@ function App() {
     noteApiServices
       .updateNoteObj(id, toUpdate)
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setNotes(notes.map((a) => (a.id !== id ? a : data)));
       })
       .catch((err) => {
-        setErrMsg("No such object exist, please refreash your browser.");
-        setTimeout(() => setErrMsg(null), 5000);
+        console.dir(err);
+        // setErrMsg(err);
+        setTimeout(() => setErrMsg(null), 2000);
       });
   };
   return (
