@@ -68,8 +68,8 @@ function App() {
     noteApiServices
       .updateNoteObj(id, toUpdate)
       .then((data) => {
-        // console.log(data);
-        setNotes(notes.map((a) => (a.id !== id ? a : data)));
+        console.dir(data);
+        setNotes(notes.map((a) => (a.id !== id ? a : data.updatedNote)));
       })
       .catch((err) => {
         // console.dir(err);
@@ -77,6 +77,7 @@ function App() {
         setTimeout(() => setErrMsg(null), 2000);
       });
   };
+
   return (
     <div>
       <h1>Heroku Notes App</h1>
