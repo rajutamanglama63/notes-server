@@ -1,0 +1,74 @@
+name: Project pipeline workflow!
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+jobs:
+  simple_deployment_pipeline:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+      - name: npm install
+        run: npm install && cd frontend && npm install
+      - name: lint
+        run: npm run lint
+
+      - name: build
+        run: npm run build
+
+      - name: deploy to heroku
+        if: ${{ github.event_name == 'push' }}
+        uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}} #Secret key for heroku api
+          heroku_app_name: "agile-depths-91848" #Must be unique in Heroku
+          heroku_email: "Lr0073558@gmail.com"
+          healthcheck: "https://git.heroku.com/agile-depths-91848.git/health"
+          checkstring: "ok"
+          rollbackonhealthcheckfailed: true
+
+  tag-releases:
+    permissions: write-all
+    needs: [simple_deployment_pipeline]
+    runs-on: ubuntu-latest
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      WITH_V: true
+      INITIAL_VERSION: 0.0.0
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: "0"
+      # bump tags and releases
+      - name: Bump version and push tag major release
+        if: ${{contains(env.JOIN_COMMIT_MESSAGES,'#major') && !contains(env.JOIN_COMMIT_MESSAGES,'#skip')}}
+
+        uses: anothrNick/github-tag-action@1.40.0
+        id: major
+        env:
+          DEFAULT_BUMP: major
+          JOIN_COMMIT_MESSAGES: ${{ join(github.event.commits.*.message)}}
+
+      - name: Bump version and push tag minor release
+        if: ${{contains(env.JOIN_COMMIT_MESSAGES,'#minor') && !contains(env.JOIN_COMMIT_MESSAGES,'#skip')}}
+        uses: anothrNick/github-tag-action@1.40.0
+        id: minor
+        env:
+          DEFAULT_BUMP: minor
+          JOIN_COMMIT_MESSAGES: ${{ join(github.event.commits.*.message)}}
+
+      - name: Bump version and push tag patch release
+        if: ${{ steps.major.conclusion != 'success' && steps.minor.conclusion != 'success' && !contains(env.JOIN_COMMIT_MESSAGES,'#skip')}}
+        uses: anothrNick/github-tag-action@1.40.0
+        env:
+          DEFAULT_BUMP: patch
+          JOIN_COMMIT_MESSAGES: ${{ join(github.event.commits.*.message)}}
